@@ -1,4 +1,0 @@
-pymorphy2==0.8
-mosestokenizer==1.0.0
-pylint==2.3.0
-pytest==3.6.3

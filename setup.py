@@ -22,6 +22,15 @@ setup(
         'pymorphy2==0.8',
         'mosestokenizer==1.0.0',
     ],
+    extras_require={
+        'dev': [
+            'black',
+            'pylint',
+            'pytest',
+            'pytest-cov',
+            'coveralls',
+        ]
+    },
     python_requires='>=3.6',
     classifiers=(
         'Programming Language :: Python :: 3',
