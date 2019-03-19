@@ -1,41 +1,119 @@
-from setuptools import (
-    setup,
-    find_packages,
-)
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Note: To use the 'upload' functionality of this file, you must:
+#   $ pip install twine
+
+import io
+import os
+import sys
+from shutil import rmtree
+
+from setuptools import find_packages, setup, Command
 
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
+NAME = 'motherjokes'
+DESCRIPTION = 'Transform sentences into awesome jokes about your mother (in russian language for now)'
+URL = 'https://github.com/FFFEGO/motherjokes'
+EMAIL = 'vladimir.kgrdv@gmail.com'
+AUTHOR = 'Vladimir Kaigorodov'
+REQUIRES_PYTHON = '>=3.6'
+VERSION = None
+
+REQUIRED = [
+    'pymorphy2==0.8',
+    'mosestokenizer==1.0.0',
+]
+
+EXTRAS = {
+    'dev': [
+        'black',
+        'pylint',
+        'pytest',
+        'pytest-cov',
+        'coveralls',
+    ]
+}
+
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+try:
+    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+        long_description = '\n' + f.read()
+except FileNotFoundError:
+    long_description = DESCRIPTION
+
+about = {}
+if not VERSION:
+    project_slug = NAME.lower().replace("-", "_").replace(" ", "_")
+    with open(os.path.join(here, project_slug, '__version__.py')) as f:
+        exec(f.read(), about)
+else:
+    about['__version__'] = VERSION
+
+
+class UploadCommand(Command):
+    """Support setup.py upload."""
+
+    description = 'Build and publish the package.'
+    user_options = []
+
+    @staticmethod
+    def status(s):
+        """Prints things in bold."""
+        print('\033[1m{0}\033[0m'.format(s))
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        try:
+            self.status('Removing previous builds…')
+            rmtree(os.path.join(here, 'dist'))
+        except OSError:
+            pass
+
+        self.status('Building Source and Wheel (universal) distribution…')
+        os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
+
+        self.status('Uploading the package to PyPI via Twine…')
+        os.system('twine upload dist/*')
+
+        self.status('Pushing git tags…')
+        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git push --tags')
+
+        sys.exit()
 
 
 setup(
-    name='motherjokes',
-    version='0.1.1',
-    description='Transform sentences into awesome jokes about your mother (in russian language for now)',
+    name=NAME,
+    version=about['__version__'],
+    description=DESCRIPTION,
     long_description=long_description,
-    long_description_content_type="text/markdown",
-    url='https://github.com/FFFEGO/motherjokes',
-    author='Vladimir Kaigorodov',
-    author_email='vladimir.kgrdv@gmail.com',
+    long_description_content_type='text/markdown',
+    author=AUTHOR,
+    author_email=EMAIL,
+    python_requires=REQUIRES_PYTHON,
+    url=URL,
     packages=find_packages(exclude=['*.tests']),
-    install_requires=[
-        'pymorphy2==0.8',
-        'mosestokenizer==1.0.0',
-    ],
-    extras_require={
-        'dev': [
-            'black',
-            'pylint',
-            'pytest',
-            'pytest-cov',
-            'coveralls',
-        ]
-    },
-    python_requires='>=3.6',
-    classifiers=(
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Topic :: Text Processing :: Linguistic',
-    ),
+    install_requires=REQUIRED,
+    extras_require=EXTRAS,
+    include_package_data=True,
     license='MIT',
+    classifiers=[
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Topic :: Text Processing :: Linguistic',
+    ],
+    cmdclass={
+        'upload': UploadCommand,
+    },
 )
