@@ -1,4 +1,4 @@
 [FORMAT]
-max-line-length=120
+max-line-length=88
 [MESSAGES CONTROL]
-disable=too-few-public-methods,missing-docstring
+disable=too-few-public-methods,missing-docstring,bad-continuation
