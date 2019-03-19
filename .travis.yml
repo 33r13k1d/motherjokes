@@ -7,8 +7,6 @@ dist: xenial
 install:
   - pip install -e '.[dev]'
 script:
-  - black --check --verbose motherjokes
-  - pylint motherjokes
-  - pytest --cov=motherjokes
+  - black --check --verbose motherjokes && pylint motherjokes && pytest --cov=motherjokes
 after_success:
   - coveralls
