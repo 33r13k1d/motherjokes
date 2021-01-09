@@ -1,7 +1,7 @@
 motherjokes ![Python 3.6+](https://img.shields.io/badge/python-3.6+-blue.svg) [![Build Status](https://travis-ci.org/FFFEGO/motherjokes.svg?branch=master)](https://travis-ci.org/FFFEGO/motherjokes) 
 ===========  
 
-Transform sentences into awesome jokes about your mother (in russian language for now).  
+Transform Russian sentences into maternal insults 
 
 Installation
 ------------
